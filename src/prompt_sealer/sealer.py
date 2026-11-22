@@ -70,28 +70,12 @@ def seal_prompt(prompt : bytes, key : bytes, file_id : bytes, expires : int, cha
     record["signature"] = stamp_note(signing_key, s_data).hex()
     return json.dumps(record, sort_keys=True, separators=(",",":")).encode("utf-8")
 
-def unseal_prompt(blob : bytes, key : bytes) -> bytes:
-    record = json.loads(blob.decode("utf-8"))
-    extra = json.dumps(
-        {
-            "version" : record["version"],
-            "file_id" : record["file_id"],
-            "expires" : record["expires"],
-            "challenge" : record["challenge"],
-            "code_a_hash" : record["code_a_hash"],
-            "bootstrap" : record["bootstrap"]
-        },
-        sort_keys=True,
-        separators=(",", ":")
-        ).encode("utf-8")    
-    return unseal_text(bytes.fromhex(record["ciphertext"]), key, bytes.fromhex(record["nonce"]), extra)
-
-
-def attach_code_b(blob : bytes, p_key : bytes, code_b : str) -> bytes:
+def unseal_prompt(blob : bytes, code_b : str) -> tuple[bytes, dict]:
     record = json.loads(blob.decode("utf-8"))
     file_id = bytes.fromhex(record["file_id"])
-    record["wrapped_key"] = wrap_p_key(p_key, code_b, file_id).hex()
-    return json.dumps(record, sort_keys=True, separators=("," ,":")).encode("utf-8")
+    p_key = unwrap_p_key(bytes.from)
+    
+    return plaintext, record
 
 def seal_file(source : Path, dest : Path, key : bytes, file_id : bytes, expires : int, challenge : bytes, signing_key, machine_secret : bytes) -> None:
     sealed = seal_prompt(read_prompt(source), key, file_id, expires, challenge, signing_key, machine_secret)
