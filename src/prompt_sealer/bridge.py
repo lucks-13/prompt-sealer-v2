@@ -50,4 +50,5 @@ class BridgeSession:
         self.history.append({"role" : "user", "content" : message})
         self.history.append({"role" : "assistant", "content" : r})
 
-    def bridge_session(source, code_b : str, stat)
+    def bridge_session(source, code_b : str, state_path, model : Callable[[str, list[dict[str, str]], str], str]) -> BridgeSession:
+        h_p, expire = b
