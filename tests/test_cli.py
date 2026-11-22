@@ -60,4 +60,9 @@ def test_wrong_code_and_tampered(monkeypatch, tmp_path : Path):
     assert runner.invoke(cli.app, ["authorize-prompt", str(sealed_file), real_code_a]).exit_code == 1
     monkeypatch.undo()
     auth_res = runner.invoke(cli.app, ["authorize-prompt", str(sealed_file), real_code_a])
-    
+    code_b = auth_res.stdout.split("Access Code B :")[1].strip().splitlines()[0].strip()
+    session = bridge.bridge_session(sealed_file, code_b, state_file, fake_model)
+    monkeypatch.setattr(bridge, "check_expire", lambda expires : False)
+    assert session.is_expired() is True
+    with pytest.raises(ValueError, match="Expired"):
+        sess
