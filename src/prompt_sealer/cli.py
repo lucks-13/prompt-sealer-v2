@@ -90,7 +90,12 @@ def chat(source : Path = typer.Argument(..., help="Sealed prompt file."), code_b
                 reply = session.send(msg)
                 typer.echo(f"AI : {reply}")
             except ValueError as err:
-                
+                typer.echo(str(err))
+            if session.is_expired():
+                break
+    except (FileNotFoundError, ValueError, RuntimeError) as error:
+        typer.echo(str(error))
+        raise typer.Exit(code=)
 
 
     
