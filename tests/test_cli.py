@@ -50,4 +50,7 @@ def test_wrong_code_and_tampered(monkeypatch, tmp_path : Path):
     assert runner.invoke(cli.app, ["seal", str(prompt_file), str(sealed_file)], input="0\n10\n").exit_code == 0
     record = json.loads(sealed_file.read_text(encoding="utf-8"))
     real_code_a = sealer.make_code_a(bytes.fromhex(record["challenge"]))
-    assert 
+    assert runner.invoke(cli.app, ["authorize-prompt", str(sealed_file), "0" * 32]).exit_code == 1
+    tampered = dict(record)
+    tampered["expires"] += 100
+    tampered_file = tmp_path / ""
