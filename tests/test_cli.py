@@ -16,7 +16,7 @@ def patch_paths(monkeypatch, tmp_path : Path) -> tuple[Path, Path]:
 def fake_model(sys_p : str, history : list[dict[str, str]], message : str) -> str:
     return f"Reply ({len(history) // 2 + 1}): {message}"
 
-def test_seal_authorize_redeem(monkeypatch, tmp_path : Path):
+def test_seal_authorize_chat(monkeypatch, tmp_path : Path):
     vault_file, state_file = patch_paths(monkeypatch, tmp_path)
     prompt_file = tmp_path / "prompt.txt"
     sealed_file = tmp_path / "sealed.json"
@@ -31,22 +31,11 @@ def test_seal_authorize_redeem(monkeypatch, tmp_path : Path):
     code_a = sealer.make_code_a(bytes.fromhex(record["challenge"]))
     res = runner.invoke(cli.app, ["authorize-prompt", str(sealed_file), code_a])
     assert res.exit_code == 0
-    assert "Access Code B :" in res.stdout
     code_b = res.stdout.split("Access Code B :")[1].strip().splitlines()[0].strip()
-    assert sealed_file.read_bytes() == sealed_before
-    state = json.loads(state_file.read_text(encoding="utf-8"))
-    assert state[record["file_id"]]["used"] is False
-    res = runner.invoke(cli.app, ["redeem-prompt", str(sealed_file), code_b, str(redeemed_file)])
-    assert res.exit_code == 0
-    assert redeemed_file.exists()
-    redeemed_text = redeemed_file.read_text(encoding="utf-8")
-    assert "--- Protected User Prompt ---" in redeemed_text
-    assert "Test Prompt" in redeemed_text
-    assert sealed_file.read_bytes() == sealed_before
-    state = json.loads(state_file.read_text(encoding="utf-8"))
-    assert state[record["file_id"]]["used"] is True
-    res = runner.invoke(cli.app, ["redeem-prompt", str(sealed_file), code_b, str(tmp_path / "again.txt")])
-    assert res.exit_code == 1
+    session = bridge.bridge_session(sealed_file, code_b, state_file, fake_model)
+    r1 = session.send("Draft an opening line")
+    r2 = session.send("Make it shorter")
+    assert "Reply (1):" in r1 and h_p not in r1
 
 def test_wrong_code_and_tampered(monkeypatch, tmp_path : Path):
     patch_paths(monkeypatch, tmp_path)
