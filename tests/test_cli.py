@@ -1,6 +1,7 @@
 import json
 import time
 from pathlib import Path
+import pytest
 from typer.testing import CliRunner
 from prompt_sealer import bridge, cli, protocol, sealer
 
@@ -46,4 +47,7 @@ def test_wrong_code_and_tampered(monkeypatch, tmp_path : Path):
     prompt_file = tmp_path / "prompt.txt"
     sealed_file = tmp_path / "sealed.json"
     prompt_file.write_text("Test Prompt", encoding="utf-8")
-    assert runner.invoke(cli.app, ["seal", str(prompt_file), str(s)])
+    assert runner.invoke(cli.app, ["seal", str(prompt_file), str(sealed_file)], input="0\n10\n").exit_code == 0
+    record = json.loads(sealed_file.read_text(encoding="utf-8"))
+    real_code_a = sealer.make_code_a(bytes.fromhex(record["challenge"]))
+    assert 
