@@ -5,8 +5,8 @@ from pathlib import Path
 from prompt_sealer.sealer import seal_file
 from prompt_sealer.vault import init_vault, check_vault,destroy_vault, open_vault
 from prompt_sealer.crypto import roll_seed
-from prompt_sealer.protocol import authorize, redeem, read_sealed
-
+from prompt_sealer.protocol import authorize, read_sealed
+from prompt_sealer.bridge import bridge_session
 
 app = typer.Typer(name="prompt-sealer",help="Seal and manage encrypted prompt files.")
 
