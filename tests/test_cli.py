@@ -13,6 +13,9 @@ def patch_paths(monkeypatch, tmp_path : Path) -> tuple[Path, Path]:
     monkeypatch.setattr(cli, "state_path", state_file)
     return vault_file, state_file
 
+def fake_model(sys_p : str, history : list[dict[str, str]], message : str) -> str:
+    return f"Reply ({len(history) // 2 + 1}): {message}"
+
 def test_seal_authorize_redeem(monkeypatch, tmp_path : Path):
     vault_file, state_file = patch_paths(monkeypatch, tmp_path)
     prompt_file = tmp_path / "prompt.txt"
@@ -49,7 +52,7 @@ def test_seal_authorize_redeem(monkeypatch, tmp_path : Path):
     assert state[record["file_id"]]["used"] is True
     res = runner.invoke(cli.app, ["redeem-prompt", str(sealed_file), code_b, str(tmp_path / "again.txt")])
     assert res.exit_code == 1
-    
+
 def test_wrong_code_and_tampered(monkeypatch, tmp_path : Path):
     patch_paths(monkeypatch, tmp_path)
     runner.invoke(cli.app, ["init"])
