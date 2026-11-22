@@ -28,4 +28,7 @@ def system_guard(h_p : str) -> str:
         f"--- Hidden Rulebook ---\n{h_p}"
     )
 
-class B
+class BridgeSession:
+    def __init__(self, h_p : str, expire : int, model : Callable[[str, list[dict[str, str]], str], str]):
+        self,_h_p = h_p
+        self.expires
