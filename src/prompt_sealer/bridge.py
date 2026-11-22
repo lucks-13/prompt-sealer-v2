@@ -31,4 +31,13 @@ def system_guard(h_p : str) -> str:
 class BridgeSession:
     def __init__(self, h_p : str, expire : int, model : Callable[[str, list[dict[str, str]], str], str]):
         self,_h_p = h_p
-        self.expires
+        self.expires = self.expires
+        self._model = model
+        self.history : list[dict[str, str]] = []
+
+    def is_expired(self) -> bool:
+        return not check_expire(self.expires)
+
+    def send(self, message : str) -> str:
+        if self.is_expired():
+            raise ValueError("Session has Expired.")
