@@ -56,4 +56,8 @@ def test_wrong_code_and_tampered(monkeypatch, tmp_path : Path):
     tampered_file = tmp_path / "tampered.json"
     tampered_file.write_text(json.dumps(tampered), encoding="utf-8")
     assert runner.invoke(cli.app, ["authorize-prompt", str(tampered_file), real_code_a]).exit_code == 1
-    monkeypatch
+    monkeypatch.setattr(protocol.time, "time", lambda : record["expires"] + 10)
+    assert runner.invoke(cli.app, ["authorize-prompt", str(sealed_file), real_code_a]).exit_code == 1
+    monkeypatch.undo()
+    auth_res = runner.invoke(cli.app, ["authorize-prompt", str(sealed_file), real_code_a])
+    
