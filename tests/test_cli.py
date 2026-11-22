@@ -53,4 +53,7 @@ def test_wrong_code_and_tampered(monkeypatch, tmp_path : Path):
     assert runner.invoke(cli.app, ["authorize-prompt", str(sealed_file), "0" * 32]).exit_code == 1
     tampered = dict(record)
     tampered["expires"] += 100
-    tampered_file = tmp_path / ""
+    tampered_file = tmp_path / "tampered.json"
+    tampered_file.write_text(json.dumps(tampered), encoding="utf-8")
+    assert runner.invoke(cli.app, ["authorize-prompt", str(tampered_file), real_code_a]).exit_code == 1
+    monkeypatch
