@@ -79,6 +79,18 @@ def chat(source : Path = typer.Argument(..., help="Sealed prompt file."), code_b
     try:
         session = bridge_session(source, code_b, state_path, model)
         typer.echo("Bridge chat started. Type 'exit' or 'quit' to end." )
+        while True:
+            if session.is_expired():
+                typer.echo("Session has expired.")
+                break
+            msg = typer.prompt("You")
+            if msg.strip().lower() in ("exit", "quit"):
+                break
+            try:
+                reply = session.send(msg)
+                typer.echo(f"AI : {reply}")
+            except ValueError as err:
+                
 
 
     
