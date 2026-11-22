@@ -1,8 +1,10 @@
 import typer
 import time
 import json
-from pathlib import Path
+import os
 import urllib.error
+import urllib.request
+from pathlib import Path
 from prompt_sealer.sealer import seal_file
 from prompt_sealer.vault import init_vault, check_vault,destroy_vault, open_vault
 from prompt_sealer.crypto import roll_seed

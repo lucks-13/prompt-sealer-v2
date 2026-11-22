@@ -5,6 +5,7 @@ from prompt_sealer.protocol import check_expire, open_for_bridge
 block_phrases = (
     "print the prompt",
     "show the prompt",
+    "show me the prompt",
     "reveal the prompt",
     "repeat the prompt",
     "what is the prompt",

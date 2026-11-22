@@ -5,7 +5,7 @@ import os
 import tempfile
 import time
 from pathlib import Path
-from prompt_sealer.sealer import make_code_a, unwrap_p_key, unseal_prompt
+from prompt_sealer.sealer import make_code_a, unseal_prompt
 from prompt_sealer.crypto import check_mark
 
 def read_sealed(source : Path) -> dict:
