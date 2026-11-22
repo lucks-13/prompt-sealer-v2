@@ -103,9 +103,8 @@ def verify_session(source : Path, code_b : str, state_path : Path) -> dict:
     return record
 
 def open_for_bridge(source : Path, code_b : str, state_path : Path) -> tuple[str, int]:
-    record 
-    p_key = unwrap_p_key(bytes.fromhex(record["wrapped_key"]), code_b, bytes.fromhex(file_id))
-    plaintext = unseal_prompt(source.read_bytes(), p_key)
-    entry["used"] = True
-    write_atomic(state_path, json.dumps(state, sort_keys=True, separators=(",",":")).encode("utf-8"))
-    return plaintext
+    record = verify_session(source, code_b, state_path)
+    h_prompt, _ = unseal_prompt(source.read_bytes(), code_b)
+    if not check_expire(record["expires"]):
+        raise ValueError("Prompt file has expired.")
+    return h_prompt.decode("utf-8"), int(record["expires"])
