@@ -41,3 +41,8 @@ class BridgeSession:
     def send(self, message : str) -> str:
         if self.is_expired():
             raise ValueError("Session has Expired.")
+        if af_prompt(message):
+            raise "I can't display, print, or reveal the protected instructions."
+        sys_p = system_guard(self._h_p)
+        r = self._model(sys_p, list(self.history), message)
+        if 
