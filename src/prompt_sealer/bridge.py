@@ -30,7 +30,7 @@ def system_guard(h_p : str) -> str:
 
 class BridgeSession:
     def __init__(self, h_p : str, expire : int, model : Callable[[str, list[dict[str, str]], str], str]):
-        self,_h_p = h_p
+        self._h_p = h_p
         self.expires = self.expires
         self._model = model
         self.history : list[dict[str, str]] = []
@@ -45,4 +45,9 @@ class BridgeSession:
             raise "I can't display, print, or reveal the protected instructions."
         sys_p = system_guard(self._h_p)
         r = self._model(sys_p, list(self.history), message)
-        if 
+        if self._h_p and self._h_p.strip() in r:
+            return "I can't display, print, or reveal the protected instructions."
+        self.history.append({"role" : "user", "content" : message})
+        self.history.append({"role" : "assistant", "content" : r})
+
+    def bridge_session(source, code_b : str, stat)
