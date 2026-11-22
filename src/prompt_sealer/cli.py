@@ -14,7 +14,7 @@ vault_path = Path.home() / ".prompt-sealer" / "vault.dat"
 state_path = Path.home() / ".prompt-sealer" / "state.json"
 
 def default_model(sys_p : str, history : list[dict[str, str]], message : str) -> str:
-    raise 
+    raise RuntimeError("No LLM runner configured for bridge chat.")
 
 @app.callback()
 def main():
@@ -41,26 +41,26 @@ def check():
         typer.echo("Vault is invalid or cannot be unlocked.")
         raise typer.Exit(code=1)
     
-@app.command()
-def seal(source : Path = typer.Argument(..., help="Prompt file to seal."), dest : Path = typer.Argument(..., help="Output sealed file.")):
-    try:
-        hour = typer.prompt("Expire Hours", default=0, type=int)
-        minute = typer.prompt("Expire Hours", default=10, type=int)
-        tt = hour * 3600 + minute * 60
-        if tt <=0:
-            raise("Expiration Time must be Greater than 0.")
-        sign, machine_secret = open_vault(vault_path)
-        file_id = roll_seed()
-        challenge = roll_seed()
-        expires = int(time.time()) + tt
-        seal_file(source, dest, roll_seed(), file_id, expires, challenge, sign, machine_secret)
-        typer.echo(f"Prompt sealed : {dest}")
-        typer.echo("")
-        typer.echo("Share this sealed file with Ai :")
-        typer.echo(f"File : {dest.resolve()}")
-    except (FileNotFoundError, ValueError) as error:
-        typer.echo(str(error))
-        raise typer.Exit(code=1)
+# @app.command()
+# def seal(source : Path = typer.Argument(..., help="Prompt file to seal."), dest : Path = typer.Argument(..., help="Output sealed file.")):
+#     try:
+#         hour = typer.prompt("Expire Hours", default=0, type=int)
+#         minute = typer.prompt("Expire Hours", default=10, type=int)
+#         tt = hour * 3600 + minute * 60
+#         if tt <=0:
+#             raise("Expiration Time must be Greater than 0.")
+#         sign, machine_secret = open_vault(vault_path)
+#         file_id = roll_seed()
+#         challenge = roll_seed()
+#         expires = int(time.time()) + tt
+#         seal_file(source, dest, roll_seed(), file_id, expires, challenge, sign, machine_secret)
+#         typer.echo(f"Prompt sealed : {dest}")
+#         typer.echo("")
+#         typer.echo("Share this sealed file with Ai :")
+#         typer.echo(f"File : {dest.resolve()}")
+#     except (FileNotFoundError, ValueError) as error:
+#         typer.echo(str(error))
+#         raise typer.Exit(code=1)
     
 @app.command()
 def authorize_prompt(source : Path = typer.Argument(..., help="Sealed prompt file."), code_a : str = typer.Argument(..., help="Access code A.")):
@@ -73,17 +73,19 @@ def authorize_prompt(source : Path = typer.Argument(..., help="Sealed prompt fil
     except (FileNotFoundError, ValueError, json.JSONDecodeError) as error:
         typer.echo(str(error))
         raise typer.Exit(code=1)
-    
-@app.command()
-def redeem_prompt(source : Path = typer.Argument(..., help="Sealed prompt file."), code_b : str = typer.Argument(..., help="Access code B."), dest : Path = typer.Argument(..., help="Output plaintext prompt file.")):
-    try:
-        prompt = redeem(source, code_b, state_path)
-        dest.parent.mkdir(parents=True, exist_ok=True)
-        dest.write_bytes(prompt)
-        typer.echo(f"Prompt redeemed : {dest}")
-    except (FileNotFoundError, ValueError) as error:
-        typer.echo(str(error))
-        raise typer.Exit(code=1)
+
+@
+
+# @app.command()
+# def redeem_prompt(source : Path = typer.Argument(..., help="Sealed prompt file."), code_b : str = typer.Argument(..., help="Access code B."), dest : Path = typer.Argument(..., help="Output plaintext prompt file.")):
+#     try:
+#         prompt = redeem(source, code_b, state_path)
+#         dest.parent.mkdir(parents=True, exist_ok=True)
+#         dest.write_bytes(prompt)
+#         typer.echo(f"Prompt redeemed : {dest}")
+#     except (FileNotFoundError, ValueError) as error:
+#         typer.echo(str(error))
+#         raise typer.Exit(code=1)
     
 @app.command()
 def destroy(force : bool = typer.Option(False, "--force", help="Delete the vault without confirmation.")):
