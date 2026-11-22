@@ -25,7 +25,7 @@ def init():
     except FileExistsError:
         typer.echo("Vault already exists.")
         raise typer.Exit(code=1)
-
+    
 @app.command()
 def check():
     try:
