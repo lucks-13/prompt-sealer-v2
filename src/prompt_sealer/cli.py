@@ -37,7 +37,7 @@ def check():
     except ValueError:
         typer.echo("Vault is invalid or cannot be unlocked.")
         raise typer.Exit(code=1)
-
+    
 @app.command()
 def seal(source : Path = typer.Argument(..., help="Prompt file to seal."), dest : Path = typer.Argument(..., help="Output sealed file.")):
     try:
