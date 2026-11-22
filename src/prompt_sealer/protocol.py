@@ -86,7 +86,7 @@ def authorize(source : Path, code_a : str, machine_secret : bytes, file_id : byt
     write_atomic(state_path, json.dumps(state, sort_keys=True, separators=(",",":")).encode("utf-8"))
     return code_b
 
-def redeem(source : Path, code_b : str, state_path : Path) -> bytes:
+def verify_session(source : Path, code_b : str, state_path : Path) -> dict:
     record = read_sealed(source)
     file_id = record["file_id"]
     if not check_expire(record["expires"]):
@@ -95,13 +95,15 @@ def redeem(source : Path, code_b : str, state_path : Path) -> bytes:
     entry = state.get(file_id)
     if not isinstance(entry, dict):
         raise ValueError("No Authorization exists.")
-    if entry["used"]:
-        raise ValueError("Access code has already been used.")
     if int(time.time()) >= entry["expires"]:
         raise ValueError("Authorization has expired.")
     code_b_hash = hashlib.sha256(code_b.strip().upper().encode("utf-8")).hexdigest()
     if not hmac.compare_digest(code_b_hash, entry["code_b_hash"]):
         raise ValueError("Invalid access code.")
+    return record
+
+def open_for_bridge(source : Path, code_b : str, state_path : Path) -> tuple[str, int]:
+    record 
     p_key = unwrap_p_key(bytes.fromhex(record["wrapped_key"]), code_b, bytes.fromhex(file_id))
     plaintext = unseal_prompt(source.read_bytes(), p_key)
     entry["used"] = True
