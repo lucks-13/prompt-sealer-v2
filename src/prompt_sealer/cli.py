@@ -79,7 +79,7 @@ def authorize_prompt(source : Path = typer.Argument(..., help="Sealed prompt fil
     except (FileNotFoundError, ValueError, json.JSONDecodeError) as error:
         typer.echo(str(error))
         raise typer.Exit(code=1)
-
+    
 @app.command()
 def chat(source : Path = typer.Argument(..., help="Sealed prompt file."), code_b : str = typer.Argument(..., help="Access code B.")):
     try:
