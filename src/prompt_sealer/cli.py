@@ -77,7 +77,7 @@ def authorize_prompt(source : Path = typer.Argument(..., help="Sealed prompt fil
 @app.command()
 def chat(source : Path = typer.Argument(..., help="Sealed prompt file."), code_b : str = typer.Argument(..., help="Access code B.")):
     try:
-        session = bridge_session(source, code_b, state_path, model)
+        session = bridge_session(source, code_b, state_path, default_model)
         typer.echo("Bridge chat started. Type 'exit' or 'quit' to end." )
         while True:
             if session.is_expired():
@@ -95,10 +95,8 @@ def chat(source : Path = typer.Argument(..., help="Sealed prompt file."), code_b
                 break
     except (FileNotFoundError, ValueError, RuntimeError) as error:
         typer.echo(str(error))
-        raise typer.Exit(code=)
+        raise typer.Exit(code=1)
 
-
-    
 @app.command()
 def destroy(force : bool = typer.Option(False, "--force", help="Delete the vault without confirmation.")):
     if not force:
