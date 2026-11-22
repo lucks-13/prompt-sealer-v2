@@ -13,6 +13,9 @@ app = typer.Typer(name="prompt-sealer",help="Seal and manage encrypted prompt fi
 vault_path = Path.home() / ".prompt-sealer" / "vault.dat"
 state_path = Path.home() / ".prompt-sealer" / "state.json"
 
+def default_model(sys_p : str, history : list[dict[str, str]], message : str) -> str:
+    raise 
+
 @app.callback()
 def main():
     pass
