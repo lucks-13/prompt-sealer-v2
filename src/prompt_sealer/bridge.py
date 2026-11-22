@@ -31,12 +31,12 @@ def system_guard(h_p : str) -> str:
 class BridgeSession:
     def __init__(self, h_p : str, expire : int, model : Callable[[str, list[dict[str, str]], str], str]):
         self._h_p = h_p
-        self.expires = self.expires
+        self.expire = expire
         self._model = model
         self.history : list[dict[str, str]] = []
 
     def is_expired(self) -> bool:
-        return not check_expire(self.expires)
+        return not check_expire(self.expire)
 
     def send(self, message : str) -> str:
         if self.is_expired():
@@ -51,4 +51,5 @@ class BridgeSession:
         self.history.append({"role" : "assistant", "content" : r})
 
     def bridge_session(source, code_b : str, state_path, model : Callable[[str, list[dict[str, str]], str], str]) -> BridgeSession:
-        h_p, expire = b
+        h_p, expire = open_for_bridge(source, code_b, state_path)
+        return BridgeSession(h_p=h_p, expire=expire, model=model)
