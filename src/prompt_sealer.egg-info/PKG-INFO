@@ -1,0 +1,10 @@
+Metadata-Version: 2.4
+Name: prompt-sealer
+Version: 0.1.0
+Summary: A machine-bound, time-limited prompt encryption CLI
+Requires-Python: >=3.10
+Requires-Dist: typer>=0.12
+Requires-Dist: cryptography>=44
+Requires-Dist: pywin32>=306; sys_platform == "win32"
+Provides-Extra: dev
+Requires-Dist: pytest>=8; extra == "dev"
