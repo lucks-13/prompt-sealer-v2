@@ -2,7 +2,7 @@ import json
 import time
 from pathlib import Path
 from typer.testing import CliRunner
-from prompt_sealer import cli, protocol, sealer
+from prompt_sealer import bridge, cli, protocol, sealer
 
 runner = CliRunner()
 
@@ -20,8 +20,8 @@ def test_seal_authorize_chat(monkeypatch, tmp_path : Path):
     vault_file, state_file = patch_paths(monkeypatch, tmp_path)
     prompt_file = tmp_path / "prompt.txt"
     sealed_file = tmp_path / "sealed.json"
-    redeemed_file = tmp_path / "redeemed.txt"
-    prompt_file.write_text("Test Prompt", encoding="utf-8")
+    h_p = "Secret coaching instructions for drafting speeches."
+    prompt_file.write_text(h_p, encoding="utf-8")
     assert runner.invoke(cli.app, ["init"]).exit_code == 0
     assert runner.invoke(cli.app, ["check"]).exit_code == 0
     assert runner.invoke(cli.app, ["seal", str(prompt_file), str(sealed_file)], input="0\n15\n").exit_code == 0
@@ -43,4 +43,7 @@ def test_seal_authorize_chat(monkeypatch, tmp_path : Path):
 def test_wrong_code_and_tampered(monkeypatch, tmp_path : Path):
     _, state_file = patch_paths(monkeypatch, tmp_path)
     runner.invoke(cli.app, ["init"])
-    
+    prompt_file = tmp_path / "prompt.txt"
+    sealed_file = tmp_path / "sealed.json"
+    prompt_file.write_text("Test Prompt", encoding="utf-8")
+    assert runner.invoke(cli.app, ["seal", str(prompt_file), str(s)])
