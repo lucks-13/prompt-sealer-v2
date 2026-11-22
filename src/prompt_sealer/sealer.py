@@ -35,7 +35,19 @@ def make_code_a(challenge : bytes) -> str:
 
 def hash_code_a(code_a : str) -> str:
     return hashlib.sha256(code_a.strip().upper().encode("utf-8")).hexdigest()
-      
+
+def seal_extra(record : dict) -> bytes:
+    return json.dumps(
+        {
+            "version" : record["version"],
+            "file_id" : record["file_id"],
+            "expires" : record["expires"],
+            "challenge" : record["challenge"],
+            "code_a"
+
+        }
+    ).encode("utf-8")
+
 def seal_prompt(prompt : bytes, key : bytes, file_id : bytes, expires : int, challenge : bytes, signing_key, machine_secret : bytes) -> bytes:
     code_a = make_code_a(challenge)
     code_a_h = hash_code_a(code_a)
@@ -49,6 +61,8 @@ def seal_prompt(prompt : bytes, key : bytes, file_id : bytes, expires : int, cha
         "code_a_hash" : code_a_h,
         "wrapped_key" : wrapped_key
     }
+    extra = sealed_extra(record)
+
     s_data = json.dumps(record, sort_keys=True, separators=(",",":")).encode("utf-8")
     record["signature"] = stamp_note(signing_key, s_data).hex()
     return json.dumps(record, sort_keys=True, separators=(",",":")).encode("utf-8")
