@@ -39,19 +39,6 @@ def hash_code_a(code_a : str) -> str:
 def seal_prompt(prompt : bytes, key : bytes, file_id : bytes, expires : int, challenge : bytes, signing_key, machine_secret : bytes) -> bytes:
     code_a = make_code_a(challenge)
     code_a_h = hash_code_a(code_a)
-    extra = json.dumps(
-        {
-            "version" : 1,
-            "file_id" : file_id.hex(),
-            "expires" : expires,
-            "challenge" : challenge.hex(),
-            "code_a_hash" : code_a_h,
-            "bootstrap" : Ai_bootstrap,
-        },
-        sort_keys=True,
-        separators=(",", ":"),
-    ).encode("utf-8")
-    nonce, ciphertext = seal_text(payload(prompt), key, extra)
     code_b = make_code_b(machine_secret, file_id)
     wrapped_key = wrap_p_key(key, code_b, file_id).hex()
     record = {
@@ -60,9 +47,6 @@ def seal_prompt(prompt : bytes, key : bytes, file_id : bytes, expires : int, cha
         "expires" : expires,
         "challenge" : challenge.hex(),
         "code_a_hash" : code_a_h,
-        "bootstrap" : Ai_bootstrap,
-        "nonce" : nonce.hex(),
-        "ciphertext" : ciphertext.hex(),
         "wrapped_key" : wrapped_key
     }
     s_data = json.dumps(record, sort_keys=True, separators=(",",":")).encode("utf-8")
