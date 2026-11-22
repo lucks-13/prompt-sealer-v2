@@ -75,7 +75,11 @@ def authorize_prompt(source : Path = typer.Argument(..., help="Sealed prompt fil
         raise typer.Exit(code=1)
 
 @app.command()
-def chat(source : Path = typer.Argument(..., help="Sealed prompt file."), code)
+def chat(source : Path = typer.Argument(..., help="Sealed prompt file."), code_b : str = typer.Argument(..., help="Access code B.")):
+    try:
+        session = bridge_session(source, code_b, state_path, model)
+        typer.echo("Bridge chat started. Type 'exit' or 'quit' to end." )
+
 
     
 @app.command()
