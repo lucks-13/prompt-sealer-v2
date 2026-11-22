@@ -16,6 +16,9 @@ app = typer.Typer(name="prompt-sealer",help="Seal and manage encrypted prompt fi
 vault_path = Path.home() / ".prompt-sealer" / "vault.dat"
 state_path = Path.home() / ".prompt-sealer" / "state.json"
 
+local_model_name = os.getenv("prompt_sealer_model", "gemma3:1b")
+local_ollama_url = os.getenv("prompt_sealer_ollama_url", "http://localhost:11434/api/chat")
+
 def default_model(sys_p : str, history : list[dict[str, str]], message : str) -> str:
     raise RuntimeError("No LLM runner configured for bridge chat.")
 
