@@ -31,14 +31,16 @@ def base_dir() -> Path | None:
 
 def b_ollama() -> None:
     global ollama_proc
-    if ollama_proc is not None and ollama_proc.poll() is None:
-        if os.name == "nt":
-            subprocess.run(["taskkill", "/F", "/T", "/PID", str(ollama_proc.pid)], stdout = subprocess.DEVNULL, stderr = subprocess.DEVNULL, check )
-        ollama_proc.terminate()
-        try:
-            ollama_proc.wait(timeout = 5)
-        except subprocess.TimeoutExpired:
-            ollama_proc.kill()
+    if ollama_proc is not None:
+        if ollama_proc.poll() is None:
+            if os.name == "nt":
+                subprocess.run(["taskkill", "/F", "/T", "/PID", str(ollama_proc.pid)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=False)
+            else:
+                ollama_proc.terminate()
+                try:
+                    ollama_proc.wait(timeout=5)
+                except subprocess.TimeoutExpired:
+                    ollama_proc.kill()
         ollama_proc = None
 
 def e_ollama_r() -> None:
@@ -70,6 +72,7 @@ def e_ollama_r() -> None:
                 return
         except Exception:
             time.sleep(0.3)
+    b_ollama()
     raise RuntimeError("Timed out.")
 
 def default_model(sys_p : str, history : list[dict[str, str]], message : str) -> str:
