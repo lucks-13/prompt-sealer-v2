@@ -1,9 +1,9 @@
 # Prompt Sealer V2
 
-Hello everyone! This project is one of my biggest project where technically this works as i expected but not as i expected. So this this concludes my version 1. { Version 2 Coming soon }
+Hello everyone! This project is one of my biggest project where technically this works as i expected but not as i expected. So this this concludes my version 2.
 
 # What my project does.
-A python cli tool build with typer which encrypts prompts. so that your personal prompts stays private.
+A python cli tool build with typer which encrypts prompts. so that your personal prompts stays private. A own offline ai model is included
 
 # My Motive
 
@@ -12,6 +12,8 @@ Consider two persons A and B, Person A wants to send a prompt which he use daily
 # Now for the future update
 
 Everything works as expected but there is a major vulnerability which is once ai completed scanning the prompt stays inside ai and also if Person B asks to give the prompt easy to copy, then the ai blindly gives entire prompt. Tried all the methods and everything but still fails so on the version 2 i need to improve them rest all works as i expected.
+
+Version 2 update : Theoritically this project is impossible beca
 
 # How to run this project.
 
