@@ -32,7 +32,12 @@ def default_model(sys_p : str, history : list[dict[str, str]], message : str) ->
     try:
         with urllib.request.urlopen(req, timeout = 120) as resp:
             data = json.loads(resp.read().decode("utf-8"))
-        cont
+        content = data.get("message", {}).get("content", "")
+        if not content:
+            raise RuntimeError("Empty Response from Model.")
+        return content
+    except (urllib.error.URLError, TimeoutError, json.JSONDecodeError) as exc:
+        ra
 
 @app.callback()
 def main():
