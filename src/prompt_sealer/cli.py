@@ -20,12 +20,12 @@ local_model_name = os.getenv("prompt_sealer_model", "gemma3:1b")
 local_ollama_url = os.getenv("prompt_sealer_ollama_url", "http://localhost:11434/api/chat")
 
 def default_model(sys_p : str, history : list[dict[str, str]], message : str) -> str:
-    message = [{"role" : "system", "content" : sys_p}]
-    message.extend(history)
-    message.append({"role" : "user", "content" : message})
+    messages = [{"role" : "system", "content" : sys_p}]
+    messages.extend(history)
+    messages.append({"role" : "user", "content" : message})
     payload = json.dumps({
         "model" : local_model_name,
-        "messages" : message,
+        "messages" : messages,
         "stream" : False,
     }).encode("utf-8")
     req = urllib.request.Request(local_ollama_url, data = payload, headers = {"Content-Type" : "application/json"}, method = "POST")
@@ -37,7 +37,7 @@ def default_model(sys_p : str, history : list[dict[str, str]], message : str) ->
             raise RuntimeError("Empty Response from Model.")
         return content
     except (urllib.error.URLError, TimeoutError, json.JSONDecodeError) as exc:
-        ra
+        raise RuntimeError(f"Could not reach model : {local_model_name} at {local_ollama_url}") from exc
 
 @app.callback()
 def main():
