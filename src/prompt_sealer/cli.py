@@ -53,7 +53,12 @@ def e_ollama_r() -> None:
     bundled_exe = base_dir / "ollama_bin" / "ollama.exe"
     bundled_models = base_dir / "ollama_models"
     if not bundled_exe.exists():
-        raise RuntimeError("Ollama binary is missing at {bundl}") 
+        raise RuntimeError("Ollama binary is missing at {bundled_exe}")
+    env = os.environ.copy()
+    if bundled_models.exists():
+        env["ollama_models"] = str(bundled_models)
+    env.setdefault("ollama_host", "127.0.0.1:11434")
+    creation_flags = getattr(subprocess, "create_no_win")
 
 def default_model(sys_p : str, history : list[dict[str, str]], message : str) -> str:
     messages = [{"role" : "system", "content" : sys_p}]
