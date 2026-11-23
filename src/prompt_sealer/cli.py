@@ -20,7 +20,16 @@ vault_path = Path.home() / ".prompt-sealer" / "vault.dat"
 state_path = Path.home() / ".prompt-sealer" / "state.json"
 
 local_model_name = os.getenv("prompt_sealer_model", "gemma3:1b")
-local_ollama_url = os.getenv("prompt_sealer_ollama_url", "http://localhost:11434/api/chat")
+local_ollama_url = os.getenv("prompt_sealer_ollama_url", "http://127.0.0.1:11434/api/chat")
+
+ollama_proc : subprocess.Popen | None = None
+
+def base_dir() -> Path | None:
+    if getattr(sys, "frozen", False) and hasattr(sys, "meipass"):
+        return Path(sys.meipass)
+    return None
+
+def bun
 
 def default_model(sys_p : str, history : list[dict[str, str]], message : str) -> str:
     messages = [{"role" : "system", "content" : sys_p}]
