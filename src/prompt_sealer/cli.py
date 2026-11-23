@@ -45,7 +45,15 @@ def e_ollama_r() -> None:
     try:
         with urllib.request.urlopen(tags_url, timeout = 2):
             return
-    except 
+    except Exception:
+        pass
+    base_dir = base_dir()
+    if base_dir is None:
+        return
+    bundled_exe = base_dir / "ollama_bin" / "ollama.exe"
+    bundled_models = base_dir / "ollama_models"
+    if not bundled_exe.exists():
+        raise RuntimeError("Ollama binary is missing at {bundl}") 
 
 def default_model(sys_p : str, history : list[dict[str, str]], message : str) -> str:
     messages = [{"role" : "system", "content" : sys_p}]
