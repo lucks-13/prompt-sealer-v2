@@ -53,7 +53,7 @@ def e_ollama_r() -> None:
     bundled_exe = bundle_root / "ollama_bin" / "ollama.exe"
     bundled_models = bundle_root / "ollama_models"
     if not bundled_exe.exists():
-        raise RuntimeError("Ollama binary is missing at {bundled_exe}")
+        raise RuntimeError(f"Ollama binary is missing at {bundled_exe}")
     env = os.environ.copy()
     if bundled_models.exists():
         env["OLLAMA_MODELS"] = str(bundled_models)
@@ -71,6 +71,7 @@ def e_ollama_r() -> None:
     raise RuntimeError("Timed out.")
 
 def default_model(sys_p : str, history : list[dict[str, str]], message : str) -> str:
+    e_ollama_r()
     messages = [{"role" : "system", "content" : sys_p}]
     messages.extend(history)
     messages.append({"role" : "user", "content" : message})
@@ -170,6 +171,8 @@ def chat(source : Path = typer.Argument(..., help="Sealed prompt file."), code_b
     except (FileNotFoundError, ValueError, RuntimeError) as error:
         typer.echo(str(error))
         raise typer.Exit(code=1)
+    finally:
+        b_ollama()
 
 @app.command()
 def destroy(force : bool = typer.Option(False, "--force", help="Delete the vault without confirmation.")):
