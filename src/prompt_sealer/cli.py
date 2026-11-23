@@ -32,6 +32,8 @@ def base_dir() -> Path | None:
 def b_ollama() -> None:
     global ollama_proc
     if ollama_proc is not None and ollama_proc.poll() is None:
+        if os.name == "nt":
+            subprocess.run(["taskkill", "/F", "/T", "/PID", str(ollama_proc.pid)], stdout = subprocess.DEVNULL, stderr = subprocess.DEVNULL, check )
         ollama_proc.terminate()
         try:
             ollama_proc.wait(timeout = 5)
