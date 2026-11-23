@@ -29,7 +29,15 @@ def base_dir() -> Path | None:
         return Path(sys.meipass)
     return None
 
-def bun
+def b_ollama() -> None:
+    global ollama_proc
+    if ollama_proc is not None and ollama_proc.poll() is None:
+        ollama_proc.terminate()
+        try:
+            ollama_proc.wait(timeout = 5)
+        except subprocess.TimeoutExpired:
+            ollama_proc.kill()
+        ollama_proc = None
 
 def default_model(sys_p : str, history : list[dict[str, str]], message : str) -> str:
     messages = [{"role" : "system", "content" : sys_p}]
