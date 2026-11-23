@@ -61,7 +61,14 @@ def e_ollama_r() -> None:
     creation_flags = getattr(subprocess, "create_no_window", 0)
     ollama_proc = subprocess.Popen([str(bundled_exe), "serve"], env = env, stdout = subprocess.DEVNULL, stderr = subprocess.DEVNULL, creationflags = creation_flags)
     atexit.register(b_ollama)
-    
+    deadline = time.time() + 20
+    while time.time() < deadline:
+        try:
+            with urllib.request.urlopen(tags_url, timeout = 1):
+                return
+        except Exception:
+            time.sleep(0.3)
+    raise RuntimeError("Timed out.")
 
 def default_model(sys_p : str, history : list[dict[str, str]], message : str) -> str:
     messages = [{"role" : "system", "content" : sys_p}]
