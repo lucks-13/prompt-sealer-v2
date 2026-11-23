@@ -5,7 +5,7 @@ Hello everyone! This project is one of my biggest project where technically this
 # What my project does.
 A python cli tool build with typer which encrypts prompts. so that your personal prompts stays private.
 
-# My Motive 
+# My Motive
 
 Consider two persons A and B, Person A wants to send a prompt which he use daily to Person B but if he shares it the prompt goes public and anyone can use it. so what my project does is. Person A installs my cli project and encrypts the prompt so it gives a encrypted file, now Person A shares that file to person B, now person B cannot read it coz its encrypted, now person B shares the encrypted file to ai { it could be anything } now ai scans that entire file and gives Access code A, now Person B shares the code to Person A then Person A sends them back to cli everthing is machine embedded so if we delete and reinstall cli even on the same machine the code changes, so after giving them cli gives Access code B, Now the final part the Access code B is shared to the ai and now ai can access the file, all these flow must happen within the time limit else prompt get deleted.
 
