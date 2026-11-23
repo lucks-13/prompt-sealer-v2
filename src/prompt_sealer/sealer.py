@@ -11,9 +11,6 @@ def read_prompt(location : Path) -> bytes:
         raise FileNotFoundError("Prompt file does not exist.")
     return location.read_bytes()
 
-def derive_prompt_key(machine_secret : bytes, file_id : bytes) -> bytes:
-    return HKDF(algorithm=hashes.SHA256(), length=32, salt=file_id, info=b"prompt-sealer-prompt-key").derive(machine_secret)
-
 def make_code_b(machine_secret : bytes, file_id : bytes) -> str:
     message = b"prompt-sealer-code-b:" + file_id
     return hmac.new(machine_secret, message, hashlib.sha256).hexdigest()[:32].upper()
@@ -70,14 +67,14 @@ def seal_prompt(prompt : bytes, key : bytes, file_id : bytes, expires : int, cha
     record["signature"] = stamp_note(signing_key, s_data).hex()
     return json.dumps(record, sort_keys=True, separators=(",",":")).encode("utf-8")
 
+def seal_file(source : Path, dest : Path, key : bytes, file_id : bytes, expires : int, challenge : bytes, signing_key, machine_secret : bytes) -> None:
+    sealed = seal_prompt(read_prompt(source), key, file_id, expires, challenge, signing_key, machine_secret)
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    dest.write_bytes(sealed)
+
 def unseal_prompt(blob : bytes, code_b : str) -> tuple[bytes, dict]:
     record = json.loads(blob.decode("utf-8"))
     file_id = bytes.fromhex(record["file_id"])
     p_key = unwrap_p_key(bytes.fromhex(record["wrapped_key"]), code_b, file_id)
     plaintext = unseal_text(bytes.fromhex(record["ciphertext"]), p_key, bytes.fromhex(record["nonce"]), seal_extra(record))
     return plaintext, record
-
-def seal_file(source : Path, dest : Path, key : bytes, file_id : bytes, expires : int, challenge : bytes, signing_key, machine_secret : bytes) -> None:
-    sealed = seal_prompt(read_prompt(source), key, file_id, expires, challenge, signing_key, machine_secret)
-    dest.parent.mkdir(parents=True, exist_ok=True)
-    dest.write_bytes(sealed)

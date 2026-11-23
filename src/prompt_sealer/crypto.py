@@ -12,9 +12,6 @@ def nonce_seed() -> bytes:
 def mint_stamp() -> Ed25519PrivateKey:
      return Ed25519PrivateKey.generate()
 
-def reveal_badge(stamp_key : Ed25519PrivateKey) -> Ed25519PublicKey:
-    return stamp_key.public_key()
-
 def stamp_note(stamp_key : Ed25519PrivateKey, note : bytes) -> bytes:
     return stamp_key.sign(note)
 
