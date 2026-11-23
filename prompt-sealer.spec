@@ -1,7 +1,7 @@
 # -*- mode: python ; coding: utf-8 -*-
 from PyInstaller.utils.hooks import collect_all
 
-datas = [('C:/Users/lucks/AppData/Local/Programs/Ollama/ollama.exe', 'ollama_bin'), ('C:/Users/sujit/.ollama/models', 'ollama_models')]
+datas = [('C:/Users/lucks/AppData/Local/Programs/Ollama/ollama.exe', 'ollama_bin'), ('D:/Hack Club/prompt-sealer-v2/ollama_models', 'ollama_models')]
 binaries = []
 hiddenimports = []
 tmp_ret = collect_all('typer')
