@@ -13,7 +13,7 @@ Consider two persons A and B, Person A wants to send a prompt which he use daily
 
 Everything works as expected but there is a major vulnerability which is once ai completed scanning the prompt stays inside ai and also if Person B asks to give the prompt easy to copy, then the ai blindly gives entire prompt. Tried all the methods and everything but still fails so on the version 2 i need to improve them rest all works as i expected.
 
-Version 2 update : Theoritically this project is impossible because all the model belongs to a particular company so they are the admin not the person who sends the prompt so we cant prevent the Person B to not view the prompt when we uses prompt injection so what i did to overcome is using a local model and making cli to guard the prompt, this is atmost best i could do maybe on the version 3 i might find the solution to the problem so we hope for the best.
+Version 2 update : Theoritically this project is impossible because all the model belongs to a different company so they are the admin not the person who sends the prompt so we cant prevent the Person B to not view the prompt when we uses prompt injection so what i did to overcome is using a local model and making cli to guard the prompt, this is atmost best i could do maybe on the version 3 i might find the solution to the problem so we hope for the best.
 
 # How to run this project.
 
@@ -68,12 +68,16 @@ prompt-sealer chat sealed_prompt.json <ACCESS_CODE_B>
 prompt-sealer destroy
 ```
 
+# Image for Reference
+
+![Sceen Shot](image.png)
+
 # What I learned.
 
 * Encrypting and Decrypting payload with AES-256-GCM, HKDF-SHA256 and HMAC-SHA256.
 * Signing the file using Ed25519.
 * Protecting local secrets with windows DPADI [ win32crypt ] and updating state files atomically.
-* accessing a local model using ollama
+* Accessing a local model using ollama
 
 # Ai Disclosure
 
