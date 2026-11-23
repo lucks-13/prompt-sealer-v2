@@ -20,7 +20,14 @@ local_model_name = os.getenv("prompt_sealer_model", "gemma3:1b")
 local_ollama_url = os.getenv("prompt_sealer_ollama_url", "http://localhost:11434/api/chat")
 
 def default_model(sys_p : str, history : list[dict[str, str]], message : str) -> str:
-    raise RuntimeError("No LLM runner configured for bridge chat.")
+    message = [{"role" : "system", "content" : sys_p}]
+    message.extend(history)
+    message.append({"role" : "user", "content" : message})
+    payload = json.dumps({
+        "model" : local_model_name,
+        "messages" : message,
+        "stream" : 
+    })
 
 @app.callback()
 def main():
