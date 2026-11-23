@@ -46,7 +46,7 @@ prompt-sealer check
 prompt-sealer seal prompt.txt sealed_prompt
 ```
 
-4. Now Share sealed_prompt file to a ai { i tested using claude free chat / free plan coz its not working on chatgpt }
+4. Now Share sealed_prompt file to another person
 
 5. Now authorize the sealed prompt using Access Code A to get Access Code B
 
@@ -60,7 +60,15 @@ prompt-sealer authorize-prompt sealed_prompt.json <ACCESS_CODE_A>
 prompt-sealer redeem-prompt sealed_prompt <ACCESS_CODE_B> redeemed_prompt.txt
 ```
 
-7. Now to Destroy the Vault so that existing encrypted prompt become undecryptable
+7. Open chat [ guarded session ]
+
+forcing Person B to use local model where it was guaeded so Person B cannot access the original prompt
+
+```
+prompt-sealer chat sealed_prompt.json <ACCESS_CODE_B>
+```
+
+8. Now to Destroy the Vault so that existing encrypted prompt become undecryptable
 
 ```
 prompt-sealer destroy
