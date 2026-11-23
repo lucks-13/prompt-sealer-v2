@@ -54,13 +54,7 @@ prompt-sealer seal prompt.txt sealed_prompt
 prompt-sealer authorize-prompt sealed_prompt.json <ACCESS_CODE_A>
 ```
 
-6. Person A can also redeem the prompt
-
-```
-prompt-sealer redeem-prompt sealed_prompt <ACCESS_CODE_B> redeemed_prompt.txt
-```
-
-7. Open chat [ guarded session ]
+6. Open chat [ guarded session ]
 
 forcing Person B to use local model where it was guaeded so Person B cannot access the original prompt
 
@@ -68,7 +62,7 @@ forcing Person B to use local model where it was guaeded so Person B cannot acce
 prompt-sealer chat sealed_prompt.json <ACCESS_CODE_B>
 ```
 
-8. Now to Destroy the Vault so that existing encrypted prompt become undecryptable
+7. Now to Destroy the Vault so that existing encrypted prompt become undecryptable
 
 ```
 prompt-sealer destroy
@@ -79,6 +73,7 @@ prompt-sealer destroy
 * Encrypting and Decrypting payload with AES-256-GCM, HKDF-SHA256 and HMAC-SHA256.
 * Signing the file using Ed25519.
 * Protecting local secrets with windows DPADI [ win32crypt ] and updating state files atomically.
+* accessing a local model using ollama
 
 # Ai Disclosure
 
