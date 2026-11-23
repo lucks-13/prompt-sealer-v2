@@ -58,7 +58,10 @@ def e_ollama_r() -> None:
     if bundled_models.exists():
         env["ollama_models"] = str(bundled_models)
     env.setdefault("ollama_host", "127.0.0.1:11434")
-    creation_flags = getattr(subprocess, "create_no_win")
+    creation_flags = getattr(subprocess, "create_no_window", 0)
+    ollama_proc = subprocess.Popen([str(bundled_exe), "serve"], env = env, stdout = subprocess.DEVNULL, stderr = subprocess.DEVNULL, creationflags = creation_flags)
+    atexit.register(b_ollama)
+    
 
 def default_model(sys_p : str, history : list[dict[str, str]], message : str) -> str:
     messages = [{"role" : "system", "content" : sys_p}]
