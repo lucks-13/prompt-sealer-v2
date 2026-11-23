@@ -26,8 +26,13 @@ def default_model(sys_p : str, history : list[dict[str, str]], message : str) ->
     payload = json.dumps({
         "model" : local_model_name,
         "messages" : message,
-        "stream" : 
-    })
+        "stream" : False,
+    }).encode("utf-8")
+    req = urllib.request.Request(local_ollama_url, data = payload, headers = {"Content-Type" : "application/json"}, method = "POST")
+    try:
+        with urllib.request.urlopen(req, timeout = 120) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+        cont
 
 @app.callback()
 def main():
