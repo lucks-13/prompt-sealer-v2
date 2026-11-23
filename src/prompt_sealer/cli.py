@@ -25,8 +25,8 @@ local_ollama_url = os.getenv("prompt_sealer_ollama_url", "http://127.0.0.1:11434
 ollama_proc : subprocess.Popen | None = None
 
 def base_dir() -> Path | None:
-    if getattr(sys, "frozen", False) and hasattr(sys, "meipass"):
-        return Path(sys.meipass)
+    if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
+        return Path(sys._MEIPASS)
     return None
 
 def b_ollama() -> None:
@@ -47,18 +47,18 @@ def e_ollama_r() -> None:
             return
     except Exception:
         pass
-    base_dir = base_dir()
-    if base_dir is None:
+    bundle_root = base_dir()
+    if bundle_root is None:
         return
-    bundled_exe = base_dir / "ollama_bin" / "ollama.exe"
-    bundled_models = base_dir / "ollama_models"
+    bundled_exe = bundle_root / "ollama_bin" / "ollama.exe"
+    bundled_models = bundle_root / "ollama_models"
     if not bundled_exe.exists():
         raise RuntimeError("Ollama binary is missing at {bundled_exe}")
     env = os.environ.copy()
     if bundled_models.exists():
-        env["ollama_models"] = str(bundled_models)
-    env.setdefault("ollama_host", "127.0.0.1:11434")
-    creation_flags = getattr(subprocess, "create_no_window", 0)
+        env["OLLAMA_MODELS"] = str(bundled_models)
+    env.setdefault("OLLAMA_HOST", "127.0.0.1:11434")
+    creation_flags = getattr(subprocess, "CREATE_NO_WINDOW", 0)
     ollama_proc = subprocess.Popen([str(bundled_exe), "serve"], env = env, stdout = subprocess.DEVNULL, stderr = subprocess.DEVNULL, creationflags = creation_flags)
     atexit.register(b_ollama)
     deadline = time.time() + 20
