@@ -1,5 +1,4 @@
 import json
-import time
 from pathlib import Path
 import pytest
 from typer.testing import CliRunner
@@ -8,17 +7,16 @@ from prompt_sealer import bridge, cli, protocol, sealer
 runner = CliRunner()
 
 def patch_paths(monkeypatch, tmp_path : Path) -> tuple[Path, Path]:
-    vault_file = tmp_path / "vault.dat"
     state_file = tmp_path / "state.json"
-    monkeypatch.setattr(cli, "vault_path", vault_file)
+    monkeypatch.setattr(cli, "vault_path", tmp_path / "vault.dat")
     monkeypatch.setattr(cli, "state_path", state_file)
-    return vault_file, state_file
+    return state_file
 
 def fake_model(sys_p : str, history : list[dict[str, str]], message : str) -> str:
     return f"Reply ({len(history) // 2 + 1}): {message}"
 
-def test_seal_authorize_chat(monkeypatch, tmp_path : Path):
-    vault_file, state_file = patch_paths(monkeypatch, tmp_path)
+def test_e2e(monkeypatch, tmp_path : Path):
+    state_file = patch_paths(monkeypatch, tmp_path)
     prompt_file = tmp_path / "prompt.txt"
     sealed_file = tmp_path / "sealed.json"
     h_p = "Secret coaching instructions for drafting speeches."
