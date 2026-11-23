@@ -1,3 +1,6 @@
+import atexit
+import subprocess
+import sys
 import typer
 import time
 import json
