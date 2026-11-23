@@ -39,6 +39,14 @@ def b_ollama() -> None:
             ollama_proc.kill()
         ollama_proc = None
 
+def e_ollama_r() -> None:
+    global ollama_proc
+    tags_url = local_ollama_url.rsplit("/api/chat", 1)[0] + "/api/tags"
+    try:
+        with urllib.request.urlopen(tags_url, timeout = 2):
+            return
+    except 
+
 def default_model(sys_p : str, history : list[dict[str, str]], message : str) -> str:
     messages = [{"role" : "system", "content" : sys_p}]
     messages.extend(history)
