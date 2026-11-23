@@ -1,4 +1,3 @@
-import time
 from typing import Callable
 from prompt_sealer.protocol import check_expire, open_for_bridge
 

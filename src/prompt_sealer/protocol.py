@@ -60,8 +60,6 @@ def authorize(source : Path, code_a : str, machine_secret : bytes, file_id : byt
     s_data = json.dumps(s_record, sort_keys=True, separators=(",",":")).encode("utf-8")
     if not check_mark(signing_key.public_key(), sign, s_data):
         raise ValueError("Invalid sealed prompt")
-    if not hmac.compare_digest(bytes.fromhex(record["file_id"]), file_id):
-        raise ValueError("Invalid sealed prompt.")
     if not check_expire(record["expires"]):
         raise ValueError("Prompt file has expired.")
     challenge = bytes.fromhex(record["challenge"])
@@ -105,6 +103,4 @@ def verify_session(source : Path, code_b : str, state_path : Path) -> dict:
 def open_for_bridge(source : Path, code_b : str, state_path : Path) -> tuple[str, int]:
     record = verify_session(source, code_b, state_path)
     h_prompt, _ = unseal_prompt(source.read_bytes(), code_b)
-    if not check_expire(record["expires"]):
-        raise ValueError("Prompt file has expired.")
     return h_prompt.decode("utf-8"), int(record["expires"])
